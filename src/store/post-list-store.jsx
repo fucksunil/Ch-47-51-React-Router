@@ -1,8 +1,7 @@
-import { createContext, useEffect, useReducer, useState } from "react";
+import { createContext,  useReducer} from "react";
 
 export const PostList = createContext({
   postList: [],
-  loading: false,
   addPost: () => {},
   deletePost: () => {},
 });
@@ -23,8 +22,6 @@ const postListReducer = (currPostList, action) => {
 
 const PostListProvider = ({ children }) => {
   const [postList, dispatchPostList] = useReducer(postListReducer, []);
-
-  const [loading, setLoading] = useState(false);
 
   const addPost = (post) => {
     console.log("add post called");
@@ -52,29 +49,8 @@ const PostListProvider = ({ children }) => {
     });
   };
 
-  useEffect(() => {
-    setLoading(true);
-
-    const controller = new AbortController();
-    const signal = controller.signal;
-
-    fetch("https://dummyjson.com/posts", { signal })
-      .then((res) => res.json())
-      .then((data) => {
-        addInitialPosts(data.posts);
-        setLoading(false);
-      });
-
-    return () => {
-      console.log("Cleaning up UseEffect...");
-      controller.abort();
-    };
-  }, []);
-
   return (
-    <PostList.Provider
-      value={{ postList, loading, addPost, deletePost }}
-    >
+    <PostList.Provider value={{ postList, addPost, deletePost }}>
       {children}
     </PostList.Provider>
   );
