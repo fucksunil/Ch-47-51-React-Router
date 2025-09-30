@@ -4,6 +4,7 @@ import { useLoaderData } from "react-router-dom";
 
 const PostList = () => {
   const postList = useLoaderData();
+  
 
   return (
     <>
